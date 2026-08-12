@@ -58,7 +58,7 @@ int main(void)
 
     while (1) 
     {
-        sprintf((char *)oled_buffer, "%-6.1f", pitch);
+       // sprintf((char *)oled_buffer, "%-6.1f", pitch);
         OLED_ShowString(5*8,0,oled_buffer,16);
         sprintf((char *)oled_buffer, "%-6.1f", roll);
         OLED_ShowString(5*8,2,oled_buffer,16);

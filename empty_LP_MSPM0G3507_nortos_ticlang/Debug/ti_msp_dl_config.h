@@ -77,6 +77,26 @@ extern "C" {
 
 
 
+/* Defines for PWM_0 */
+#define PWM_0_INST                                                         TIMA0
+#define PWM_0_INST_IRQHandler                                   TIMA0_IRQHandler
+#define PWM_0_INST_INT_IRQN                                     (TIMA0_INT_IRQn)
+#define PWM_0_INST_CLK_FREQ                                              1000000
+/* GPIO defines for channel 0 */
+#define GPIO_PWM_0_C0_PORT                                                 GPIOB
+#define GPIO_PWM_0_C0_PIN                                         DL_GPIO_PIN_14
+#define GPIO_PWM_0_C0_IOMUX                                      (IOMUX_PINCM31)
+#define GPIO_PWM_0_C0_IOMUX_FUNC                     IOMUX_PINCM31_PF_TIMA0_CCP0
+#define GPIO_PWM_0_C0_IDX                                    DL_TIMER_CC_0_INDEX
+/* GPIO defines for channel 1 */
+#define GPIO_PWM_0_C1_PORT                                                 GPIOA
+#define GPIO_PWM_0_C1_PIN                                          DL_GPIO_PIN_7
+#define GPIO_PWM_0_C1_IOMUX                                      (IOMUX_PINCM14)
+#define GPIO_PWM_0_C1_IOMUX_FUNC                     IOMUX_PINCM14_PF_TIMA0_CCP1
+#define GPIO_PWM_0_C1_IDX                                    DL_TIMER_CC_1_INDEX
+
+
+
 
 /* Defines for I2C_OLED */
 #define I2C_OLED_INST                                                       I2C0
@@ -120,6 +140,24 @@ extern "C" {
 /* Defines for PIN_MPU6050_INT: GPIOB.1 with pinCMx 13 on package pin 48 */
 #define GPIO_MPU6050_PIN_MPU6050_INT_PIN                         (DL_GPIO_PIN_1)
 #define GPIO_MPU6050_PIN_MPU6050_INT_IOMUX                       (IOMUX_PINCM13)
+/* Port definition for Pin Group BIN */
+#define BIN_PORT                                                         (GPIOB)
+
+/* Defines for BIN1: GPIOB.6 with pinCMx 23 on package pin 58 */
+#define BIN_BIN1_PIN                                             (DL_GPIO_PIN_6)
+#define BIN_BIN1_IOMUX                                           (IOMUX_PINCM23)
+/* Defines for BIN2: GPIOB.7 with pinCMx 24 on package pin 59 */
+#define BIN_BIN2_PIN                                             (DL_GPIO_PIN_7)
+#define BIN_BIN2_IOMUX                                           (IOMUX_PINCM24)
+/* Port definition for Pin Group AIN */
+#define AIN_PORT                                                         (GPIOB)
+
+/* Defines for AIN1: GPIOB.9 with pinCMx 26 on package pin 61 */
+#define AIN_AIN1_PIN                                             (DL_GPIO_PIN_9)
+#define AIN_AIN1_IOMUX                                           (IOMUX_PINCM26)
+/* Defines for AIN2: GPIOB.10 with pinCMx 27 on package pin 62 */
+#define AIN_AIN2_PIN                                            (DL_GPIO_PIN_10)
+#define AIN_AIN2_IOMUX                                           (IOMUX_PINCM27)
 
 /* clang-format on */
 
@@ -127,10 +165,13 @@ void SYSCFG_DL_init(void);
 void SYSCFG_DL_initPower(void);
 void SYSCFG_DL_GPIO_init(void);
 void SYSCFG_DL_SYSCTL_init(void);
+void SYSCFG_DL_PWM_0_init(void);
 void SYSCFG_DL_I2C_OLED_init(void);
 void SYSCFG_DL_I2C_MPU6050_init(void);
 
 
+bool SYSCFG_DL_saveConfiguration(void);
+bool SYSCFG_DL_restoreConfiguration(void);
 
 #ifdef __cplusplus
 }

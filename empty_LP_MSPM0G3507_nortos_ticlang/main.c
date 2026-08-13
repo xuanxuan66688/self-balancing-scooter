@@ -33,8 +33,10 @@
 #include "ti_msp_dl_config.h"
 #include "main.h"
 #include "stdio.h"
+#include "USER/MOTOR.h"
 
 uint8_t oled_buffer[32];
+uint8_t buf[13] = "hello";
 
 int main(void)
 {
@@ -46,10 +48,15 @@ int main(void)
     /* Don't remove this! */
     Interrupt_Init();
 
-    OLED_ShowString(1,1,"Hello World!",16);
+    OLED_ShowString(0, 0, buf, 16);
+    DL_TimerA_startCounter(PWM_0_INST);
 
-    while (1) 
+    /* 驱动电机 A、B，各 50% 占空比（满占空比 100） */
+    MOTOR_duty(-30, MOTOR_B);
+    MOTOR_duty(-30, MOTOR_A);
+
+    while (1)
     {
-       
+
     }
 }

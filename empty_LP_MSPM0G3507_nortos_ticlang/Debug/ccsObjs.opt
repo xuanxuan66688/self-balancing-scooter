@@ -8,6 +8,7 @@
 "./Drivers/MSPM0/clock.o"
 "./Drivers/MSPM0/interrupt.o"
 "./Drivers/OLED_Hardware_I2C/oled_hardware_i2c.o"
+"./USER/MOTOR.o"
 -l"./device_linker.cmd"
 -ldevice.cmd.genlibs
 -llibc.a

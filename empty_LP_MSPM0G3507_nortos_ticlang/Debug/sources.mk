@@ -122,4 +122,5 @@ SUBDIRS := \
 Drivers/MPU6050 \
 Drivers/MSPM0 \
 Drivers/OLED_Hardware_I2C \
+USER \
 

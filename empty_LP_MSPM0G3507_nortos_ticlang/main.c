@@ -54,9 +54,9 @@ int main(void)
     /* 驱动电机 A、B，各 50% 占空比（满占空比 100） */
     MOTOR_duty(-30, MOTOR_B);
     MOTOR_duty(-30, MOTOR_A);
-
+    //
     while (1)
     {
-
+        //
     }
 }

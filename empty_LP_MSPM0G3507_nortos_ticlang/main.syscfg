@@ -9,27 +9,44 @@
 /**
  * Import the modules used in this configuration.
  */
-const GPIO   = scripting.addModule("/ti/driverlib/GPIO", {}, false);
-const GPIO1  = GPIO.addInstance();
-const GPIO2  = GPIO.addInstance();
-const GPIO3  = GPIO.addInstance();
-const GPIO4  = GPIO.addInstance();
-const I2C    = scripting.addModule("/ti/driverlib/I2C", {}, false);
-const I2C1   = I2C.addInstance();
-const I2C2   = I2C.addInstance();
-const PWM    = scripting.addModule("/ti/driverlib/PWM", {}, false);
-const PWM1   = PWM.addInstance();
-const SYSCTL = scripting.addModule("/ti/driverlib/SYSCTL");
+const CAPTURE  = scripting.addModule("/ti/driverlib/CAPTURE", {}, false);
+const CAPTURE1 = CAPTURE.addInstance();
+const CAPTURE2 = CAPTURE.addInstance();
+const GPIO     = scripting.addModule("/ti/driverlib/GPIO", {}, false);
+const GPIO1    = GPIO.addInstance();
+const GPIO2    = GPIO.addInstance();
+const GPIO3    = GPIO.addInstance();
+const GPIO4    = GPIO.addInstance();
+const I2C      = scripting.addModule("/ti/driverlib/I2C", {}, false);
+const I2C1     = I2C.addInstance();
+const I2C2     = I2C.addInstance();
+const PWM      = scripting.addModule("/ti/driverlib/PWM", {}, false);
+const PWM1     = PWM.addInstance();
+const SYSCTL   = scripting.addModule("/ti/driverlib/SYSCTL");
 
 /**
  * Write custom configuration values to the imported modules.
  */
+CAPTURE1.$name                      = "CAPTURE_0";
+CAPTURE1.timerClkPrescale           = 256;
+CAPTURE1.timerPeriod                = "15.63ms";
+CAPTURE1.interrupts                 = ["CC0_DN"];
+CAPTURE1.peripheral.ccp0Pin.$assign = "PB4";
+CAPTURE1.ccp0PinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric6";
+
+const Board = scripting.addModule("/ti/driverlib/Board", {}, false);
+
+CAPTURE2.$name                      = "CAPTURE_1";
+CAPTURE2.timerClkPrescale           = 256;
+CAPTURE2.timerPeriod                = "15.63 ms";
+CAPTURE2.interrupts                 = ["CC0_DN"];
+CAPTURE2.peripheral.ccp0Pin.$assign = "PB26";
+CAPTURE2.ccp0PinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric7";
+
 GPIO1.$name                         = "TEST_LED";
 GPIO1.port                          = "PORTB";
 GPIO1.associatedPins[0].$name       = "LED";
 GPIO1.associatedPins[0].pin.$assign = "PB22";
-
-const Board = scripting.addModule("/ti/driverlib/Board", {}, false);
 
 GPIO2.$name                         = "GPIO_MPU6050";
 GPIO2.associatedPins[0].direction   = "INPUT";
@@ -58,14 +75,14 @@ I2C1.basicEnableController             = true;
 I2C1.basicControllerBusSpeed           = 400000;
 I2C1.$name                             = "I2C_OLED";
 I2C1.peripheral.$assign                = "I2C0";
-I2C1.sdaPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric0";
 I2C1.sdaPinConfig.hideOutputInversion  = scripting.forceWrite(false);
 I2C1.sdaPinConfig.onlyInternalResistor = scripting.forceWrite(false);
 I2C1.sdaPinConfig.passedPeripheralType = scripting.forceWrite("Digital");
-I2C1.sclPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric1";
+I2C1.sdaPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric0";
 I2C1.sclPinConfig.hideOutputInversion  = scripting.forceWrite(false);
 I2C1.sclPinConfig.onlyInternalResistor = scripting.forceWrite(false);
 I2C1.sclPinConfig.passedPeripheralType = scripting.forceWrite("Digital");
+I2C1.sclPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric1";
 
 I2C2.$name                             = "I2C_MPU6050";
 I2C2.basicEnableController             = true;
@@ -73,14 +90,14 @@ I2C2.basicControllerBusSpeed           = 400000;
 I2C2.peripheral.$assign                = "I2C1";
 I2C2.peripheral.sdaPin.$assign         = "PB3";
 I2C2.peripheral.sclPin.$assign         = "PB2";
-I2C2.sdaPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric2";
 I2C2.sdaPinConfig.hideOutputInversion  = scripting.forceWrite(false);
 I2C2.sdaPinConfig.onlyInternalResistor = scripting.forceWrite(false);
 I2C2.sdaPinConfig.passedPeripheralType = scripting.forceWrite("Digital");
-I2C2.sclPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric3";
+I2C2.sdaPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric2";
 I2C2.sclPinConfig.hideOutputInversion  = scripting.forceWrite(false);
 I2C2.sclPinConfig.onlyInternalResistor = scripting.forceWrite(false);
 I2C2.sclPinConfig.passedPeripheralType = scripting.forceWrite("Digital");
+I2C2.sclPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric3";
 
 PWM1.$name                      = "PWM_0";
 PWM1.clockPrescale              = 32;
@@ -101,9 +118,11 @@ SYSCTL.forceDefaultClkConfig = true;
  * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
  * re-solve from scratch.
  */
+CAPTURE1.peripheral.$suggestSolution         = "TIMA1";
 Board.peripheral.$suggestSolution            = "DEBUGSS";
 Board.peripheral.swclkPin.$suggestSolution   = "PA20";
 Board.peripheral.swdioPin.$suggestSolution   = "PA19";
+CAPTURE2.peripheral.$suggestSolution         = "TIMG6";
 GPIO3.associatedPins[0].pin.$suggestSolution = "PB6";
 GPIO3.associatedPins[1].pin.$suggestSolution = "PB7";
 GPIO4.associatedPins[0].pin.$suggestSolution = "PB9";

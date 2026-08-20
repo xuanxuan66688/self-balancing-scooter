@@ -34,6 +34,7 @@
 #include "main.h"
 #include "stdio.h"
 #include "USER/MOTOR.h"
+#include "USER/Encoder.h"
 
 uint8_t oled_buffer[32];
 uint8_t buf[13] = "hello";
@@ -50,13 +51,21 @@ int main(void)
 
     OLED_ShowString(0, 0, buf, 16);
     DL_TimerA_startCounter(PWM_0_INST);
+    Encoder_Init();
 
     /* 驱动电机 A、B，各 50% 占空比（满占空比 100） */
-    MOTOR_duty(-30, MOTOR_B);
-    MOTOR_duty(-30, MOTOR_A);
+    MOTOR_duty(50, MOTOR_B);
+    MOTOR_duty(50, MOTOR_A);
     //
     while (1)
     {
-        //
+        /* 在 OLED 上显示两个电机的转速（RPM） */
+        sprintf((char *)oled_buffer, "A:%drpm", (int)Encoder_GetRPM(ENCODER_A));
+        OLED_ShowString(0, 0, oled_buffer, 16);
+
+        sprintf((char *)oled_buffer, "B:%drpm", (int)Encoder_GetRPM(ENCODER_B));
+        OLED_ShowString(0, 2, oled_buffer, 16);
+
+        mspm0_delay_ms(100);
     }
 }

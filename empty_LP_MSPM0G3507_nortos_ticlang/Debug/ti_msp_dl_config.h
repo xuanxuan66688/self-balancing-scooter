@@ -97,6 +97,32 @@ extern "C" {
 
 
 
+/* Defines for CAPTURE_0 */
+#define CAPTURE_0_INST                                                   (TIMA1)
+#define CAPTURE_0_INST_IRQHandler                               TIMA1_IRQHandler
+#define CAPTURE_0_INST_INT_IRQN                                 (TIMA1_INT_IRQn)
+#define CAPTURE_0_INST_LOAD_VALUE                                        (1953U)
+/* GPIO defines for channel 0 */
+#define GPIO_CAPTURE_0_C0_PORT                                             GPIOB
+#define GPIO_CAPTURE_0_C0_PIN                                      DL_GPIO_PIN_4
+#define GPIO_CAPTURE_0_C0_IOMUX                                  (IOMUX_PINCM17)
+#define GPIO_CAPTURE_0_C0_IOMUX_FUNC                 IOMUX_PINCM17_PF_TIMA1_CCP0
+
+/* Defines for CAPTURE_1 */
+#define CAPTURE_1_INST                                                   (TIMG6)
+#define CAPTURE_1_INST_IRQHandler                               TIMG6_IRQHandler
+#define CAPTURE_1_INST_INT_IRQN                                 (TIMG6_INT_IRQn)
+#define CAPTURE_1_INST_LOAD_VALUE                                        (1953U)
+/* GPIO defines for channel 0 */
+#define GPIO_CAPTURE_1_C0_PORT                                             GPIOB
+#define GPIO_CAPTURE_1_C0_PIN                                     DL_GPIO_PIN_26
+#define GPIO_CAPTURE_1_C0_IOMUX                                  (IOMUX_PINCM57)
+#define GPIO_CAPTURE_1_C0_IOMUX_FUNC                 IOMUX_PINCM57_PF_TIMG6_CCP0
+
+
+
+
+
 
 /* Defines for I2C_OLED */
 #define I2C_OLED_INST                                                       I2C0
@@ -166,6 +192,8 @@ void SYSCFG_DL_initPower(void);
 void SYSCFG_DL_GPIO_init(void);
 void SYSCFG_DL_SYSCTL_init(void);
 void SYSCFG_DL_PWM_0_init(void);
+void SYSCFG_DL_CAPTURE_0_init(void);
+void SYSCFG_DL_CAPTURE_1_init(void);
 void SYSCFG_DL_I2C_OLED_init(void);
 void SYSCFG_DL_I2C_MPU6050_init(void);
 

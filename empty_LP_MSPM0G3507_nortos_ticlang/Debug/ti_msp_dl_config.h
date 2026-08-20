@@ -97,32 +97,6 @@ extern "C" {
 
 
 
-/* Defines for CAPTURE_0 */
-#define CAPTURE_0_INST                                                   (TIMA1)
-#define CAPTURE_0_INST_IRQHandler                               TIMA1_IRQHandler
-#define CAPTURE_0_INST_INT_IRQN                                 (TIMA1_INT_IRQn)
-#define CAPTURE_0_INST_LOAD_VALUE                                        (1953U)
-/* GPIO defines for channel 0 */
-#define GPIO_CAPTURE_0_C0_PORT                                             GPIOB
-#define GPIO_CAPTURE_0_C0_PIN                                      DL_GPIO_PIN_4
-#define GPIO_CAPTURE_0_C0_IOMUX                                  (IOMUX_PINCM17)
-#define GPIO_CAPTURE_0_C0_IOMUX_FUNC                 IOMUX_PINCM17_PF_TIMA1_CCP0
-
-/* Defines for CAPTURE_1 */
-#define CAPTURE_1_INST                                                   (TIMG6)
-#define CAPTURE_1_INST_IRQHandler                               TIMG6_IRQHandler
-#define CAPTURE_1_INST_INT_IRQN                                 (TIMG6_INT_IRQn)
-#define CAPTURE_1_INST_LOAD_VALUE                                        (1953U)
-/* GPIO defines for channel 0 */
-#define GPIO_CAPTURE_1_C0_PORT                                             GPIOB
-#define GPIO_CAPTURE_1_C0_PIN                                     DL_GPIO_PIN_26
-#define GPIO_CAPTURE_1_C0_IOMUX                                  (IOMUX_PINCM57)
-#define GPIO_CAPTURE_1_C0_IOMUX_FUNC                 IOMUX_PINCM57_PF_TIMG6_CCP0
-
-
-
-
-
 
 /* Defines for I2C_OLED */
 #define I2C_OLED_INST                                                       I2C0
@@ -184,6 +158,32 @@ extern "C" {
 /* Defines for AIN2: GPIOB.10 with pinCMx 27 on package pin 62 */
 #define AIN_AIN2_PIN                                            (DL_GPIO_PIN_10)
 #define AIN_AIN2_IOMUX                                           (IOMUX_PINCM27)
+/* Defines for L_ENCODER_A: GPIOB.26 with pinCMx 57 on package pin 28 */
+#define GPIO_ENCODER_L_ENCODER_A_PORT                                    (GPIOB)
+// pins affected by this interrupt request:["L_ENCODER_A","R_ENCODER_A","R_ENCODER_B"]
+#define GPIO_ENCODER_GPIOB_INT_IRQN                             (GPIOB_INT_IRQn)
+#define GPIO_ENCODER_GPIOB_INT_IIDX             (DL_INTERRUPT_GROUP1_IIDX_GPIOB)
+#define GPIO_ENCODER_L_ENCODER_A_IIDX                       (DL_GPIO_IIDX_DIO26)
+#define GPIO_ENCODER_L_ENCODER_A_PIN                            (DL_GPIO_PIN_26)
+#define GPIO_ENCODER_L_ENCODER_A_IOMUX                           (IOMUX_PINCM57)
+/* Defines for L_ENCODER_B: GPIOA.13 with pinCMx 35 on package pin 6 */
+#define GPIO_ENCODER_L_ENCODER_B_PORT                                    (GPIOA)
+// pins affected by this interrupt request:["L_ENCODER_B"]
+#define GPIO_ENCODER_GPIOA_INT_IRQN                             (GPIOA_INT_IRQn)
+#define GPIO_ENCODER_GPIOA_INT_IIDX             (DL_INTERRUPT_GROUP1_IIDX_GPIOA)
+#define GPIO_ENCODER_L_ENCODER_B_IIDX                       (DL_GPIO_IIDX_DIO13)
+#define GPIO_ENCODER_L_ENCODER_B_PIN                            (DL_GPIO_PIN_13)
+#define GPIO_ENCODER_L_ENCODER_B_IOMUX                           (IOMUX_PINCM35)
+/* Defines for R_ENCODER_A: GPIOB.4 with pinCMx 17 on package pin 52 */
+#define GPIO_ENCODER_R_ENCODER_A_PORT                                    (GPIOB)
+#define GPIO_ENCODER_R_ENCODER_A_IIDX                        (DL_GPIO_IIDX_DIO4)
+#define GPIO_ENCODER_R_ENCODER_A_PIN                             (DL_GPIO_PIN_4)
+#define GPIO_ENCODER_R_ENCODER_A_IOMUX                           (IOMUX_PINCM17)
+/* Defines for R_ENCODER_B: GPIOB.5 with pinCMx 18 on package pin 53 */
+#define GPIO_ENCODER_R_ENCODER_B_PORT                                    (GPIOB)
+#define GPIO_ENCODER_R_ENCODER_B_IIDX                        (DL_GPIO_IIDX_DIO5)
+#define GPIO_ENCODER_R_ENCODER_B_PIN                             (DL_GPIO_PIN_5)
+#define GPIO_ENCODER_R_ENCODER_B_IOMUX                           (IOMUX_PINCM18)
 
 /* clang-format on */
 
@@ -192,8 +192,6 @@ void SYSCFG_DL_initPower(void);
 void SYSCFG_DL_GPIO_init(void);
 void SYSCFG_DL_SYSCTL_init(void);
 void SYSCFG_DL_PWM_0_init(void);
-void SYSCFG_DL_CAPTURE_0_init(void);
-void SYSCFG_DL_CAPTURE_1_init(void);
 void SYSCFG_DL_I2C_OLED_init(void);
 void SYSCFG_DL_I2C_MPU6050_init(void);
 

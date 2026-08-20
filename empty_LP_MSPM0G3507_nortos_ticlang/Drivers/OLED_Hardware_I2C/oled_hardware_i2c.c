@@ -229,10 +229,58 @@ void OLED_ShowString(uint8_t x,uint8_t y,uint8_t *chr,uint8_t sizey)
 {
     uint8_t j=0;
     while (chr[j]!='\0')
-    {		
+    {
         OLED_ShowChar(x,y,chr[j++],sizey);
         if(sizey==8)x+=6;
         else x+=sizey/2;
+    }
+}
+
+//显示带符号数字
+//x,y :起点坐标
+//num:要显示的带符号数字
+//len:数字位数（含符号），左补空格右对齐，覆盖上一次更长的旧数字
+//sizey:字体大小
+void OLED_ShowSignedNum(uint8_t x,uint8_t y,int32_t num,uint8_t len,uint8_t sizey)
+{
+    char str[12];
+    uint8_t idx = 0;
+    uint8_t neg = 0;
+    uint32_t v;
+
+    if(num < 0)
+    {
+        neg = 1;
+        v = (uint32_t)(-(int64_t)num);   //用 int64 避免 INT32_MIN 取反溢出
+    }
+    else
+    {
+        v = (uint32_t)num;
+    }
+
+    //从个位起逆序填入
+    do
+    {
+        str[idx++] = (char)('0' + (v % 10));
+        v /= 10;
+    }while(v != 0);
+
+    if(neg)
+    {
+        str[idx++] = '-';
+    }
+
+    //左补空格到 len 位，覆盖上一次更长的旧数字
+    while(idx < len)
+    {
+        str[idx++] = ' ';
+    }
+
+    //逆序逐字符输出
+    while(idx > 0)
+    {
+        OLED_ShowChar(x, y, (uint8_t)str[--idx], sizey);
+        x += (sizey == 8) ? 6 : (sizey / 2);
     }
 }
 

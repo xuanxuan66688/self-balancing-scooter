@@ -75,8 +75,7 @@ USER/Encoder.o: ../USER/Encoder.c \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/dl_wwdt.h \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_interrupt.h \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_systick.h \
- ../USER/Encoder.h \
- C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/MSPM0/clock.h
+ ../USER/Encoder.h
 ti_msp_dl_config.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/msp/msp.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/DeviceFamily.h:
@@ -152,4 +151,3 @@ C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/dl_wwdt.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_interrupt.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_systick.h:
 ../USER/Encoder.h:
-C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/MSPM0/clock.h:

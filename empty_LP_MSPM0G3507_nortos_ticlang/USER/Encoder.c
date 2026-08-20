@@ -1,85 +1,110 @@
 #include "ti_msp_dl_config.h"
 #include "Encoder.h"
-#include "clock.h"          /* 使用 tick_ms 做测速采样定时 */
 
-/* 每个编码器通道的脉冲累计值（在中断里自增） */
-static volatile int32_t g_pulse[2] = {0, 0};
-
-/* 测速采样：记录上次采样的时间与脉冲数 */
-static uint32_t g_last_tick[2]  = {0, 0};
-static int32_t  g_last_pulse[2] = {0, 0};
-static int32_t  g_speed[2]      = {0, 0};   /* 单位：脉冲/秒 */
-
-/**
- * @brief  编码器初始化
- *         使能 NVIC 中断，并启动两个输入捕获定时器
- * @return 无
+/*
+ * 正交编码器计次（A 相跳变沿触发 + B 相电平判向，2 倍频）
+ *
+ * 判向规则：
+ *   A 相上升沿 & B 相为低 -> 正向 +1
+ *   A 相下降沿 & B 相为高 -> 正向 +1
+ *   A 相上升沿 & B 相为高 -> 负向 -1
+ *   A 相下降沿 & B 相为低 -> 负向 -1
+ *
+ * 上式等价于：在 A 相跳变瞬间，A != B 则正向 +1，A == B 则负向 -1。
+ *
+ * 左编码器: A = PB26, B = PA13
+ * 右编码器: A = PB4,  B = PB5
  */
+
+volatile int32_t Encoder_L_Count = 0;
+volatile int32_t Encoder_R_Count = 0;
+
+/* 读取左编码器 A 相电平 */
+static uint8_t Encoder_L_ReadA(void)
+{
+    return DL_GPIO_readPins(GPIO_ENCODER_L_ENCODER_A_PORT,
+                GPIO_ENCODER_L_ENCODER_A_PIN) ? 1U : 0U;
+}
+
+/* 读取左编码器 B 相电平 */
+static uint8_t Encoder_L_ReadB(void)
+{
+    return DL_GPIO_readPins(GPIO_ENCODER_L_ENCODER_B_PORT,
+                GPIO_ENCODER_L_ENCODER_B_PIN) ? 1U : 0U;
+}
+
+/* 读取右编码器 A 相电平 */
+static uint8_t Encoder_R_ReadA(void)
+{
+    return DL_GPIO_readPins(GPIO_ENCODER_R_ENCODER_A_PORT,
+                GPIO_ENCODER_R_ENCODER_A_PIN) ? 1U : 0U;
+}
+
+/* 读取右编码器 B 相电平 */
+static uint8_t Encoder_R_ReadB(void)
+{
+    return DL_GPIO_readPins(GPIO_ENCODER_R_ENCODER_B_PORT,
+                GPIO_ENCODER_R_ENCODER_B_PIN) ? 1U : 0U;
+}
+
 void Encoder_Init(void)
 {
-    NVIC_EnableIRQ(CAPTURE_0_INST_INT_IRQN);   /* TIMA1：电机A 编码器 */
-    NVIC_EnableIRQ(CAPTURE_1_INST_INT_IRQN);   /* TIMG6：电机B 编码器 */
+    Encoder_L_Count = 0;
+    Encoder_R_Count = 0;
 
-    DL_TimerA_startCounter(CAPTURE_0_INST);
-    DL_TimerG_startCounter(CAPTURE_1_INST);
+    /* GPIOA/GPIOB 中断都挂在 GROUP1（IRQ1），使能一次即可 */
+    NVIC_EnableIRQ(GPIO_ENCODER_GPIOA_INT_IRQN);
+    NVIC_EnableIRQ(GPIO_ENCODER_GPIOB_INT_IRQN);
 }
 
-/**
- * @brief  获取电机转速（脉冲/秒）
- * @param  wheel  编码器通道：ENCODER_A 或 ENCODER_B
- * @return 转速（脉冲/秒），未到采样周期时返回上一次结果
- * @note   每 100ms 对脉冲数求一次差分，换算成每秒脉冲数，结果平滑稳定
- */
-int32_t Encoder_GetSpeed(uint8_t wheel)
+/* 左编码器 A 相跳变沿处理 */
+void Encoder_L_Update(void)
 {
-    uint32_t now = tick_ms;
-    uint32_t dt  = now - g_last_tick[wheel];
+    uint8_t a = Encoder_L_ReadA();
+    uint8_t b = Encoder_L_ReadB();
 
-    /* 每 100ms 更新一次速度 */
-    if (dt >= 100)
+    if (a != b)
     {
-        int32_t delta = g_pulse[wheel] - g_last_pulse[wheel];
-        g_speed[wheel] = (delta * 1000) / (int32_t)dt;   /* 脉冲/秒 */
-        g_last_tick[wheel]  = now;
-        g_last_pulse[wheel] = g_pulse[wheel];
+        Encoder_L_Count++;      /* 正向 */
     }
-
-    return g_speed[wheel];
-}
-
-/**
- * @brief  获取电机转速（转/分钟）
- * @param  wheel  编码器通道：ENCODER_A 或 ENCODER_B
- * @return 转速（RPM）
- */
-int32_t Encoder_GetRPM(uint8_t wheel)
-{
-    /* RPM = 脉冲/秒 × 60 ÷ 每圈脉冲数 */
-    return (Encoder_GetSpeed(wheel) * 60) / ENCODER_PPR;
-}
-
-/* TIMA1 输入捕获中断：电机A 编码器（PB4），每来一个脉冲计数加一 */
-void CAPTURE_0_INST_IRQHandler(void)
-{
-    switch (DL_TimerA_getPendingInterrupt(CAPTURE_0_INST))
+    else
     {
-        case DL_TIMERA_IIDX_CC0_DN:
-            g_pulse[ENCODER_A]++;
-            break;
-        default:
-            break;
+        Encoder_L_Count--;      /* 负向 */
     }
 }
 
-/* TIMG6 输入捕获中断：电机B 编码器（PB26），每来一个脉冲计数加一 */
-void CAPTURE_1_INST_IRQHandler(void)
+/* 右编码器 A 相跳变沿处理 */
+void Encoder_R_Update(void)
 {
-    switch (DL_TimerG_getPendingInterrupt(CAPTURE_1_INST))
+    uint8_t a = Encoder_R_ReadA();
+    uint8_t b = Encoder_R_ReadB();
+
+    if (a != b)
     {
-        case DL_TIMERG_IIDX_CC0_DN:
-            g_pulse[ENCODER_B]++;
-            break;
-        default:
-            break;
+        Encoder_R_Count++;      /* 正向 */
     }
+    else
+    {
+        Encoder_R_Count--;      /* 负向 */
+    }
+}
+
+int32_t Encoder_Read_L(void)
+{
+    return Encoder_L_Count;
+}
+
+int32_t Encoder_Read_R(void)
+{
+    return Encoder_R_Count;
+}
+
+void Encoder_Clear_L(void)
+{
+    Encoder_L_Count = 0;
+}
+
+void Encoder_Clear_R(void)
+{
+    Encoder_R_Count = 0;
 }

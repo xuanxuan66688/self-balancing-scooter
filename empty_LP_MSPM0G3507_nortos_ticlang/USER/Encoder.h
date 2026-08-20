@@ -3,20 +3,34 @@
 
 #include <stdint.h>
 
-/* 编码器通道选择（与 MOTOR.h 的电机编号保持一致） */
-#define ENCODER_B       0    /* 电机B 编码器，接 CAPTURE_1（PB26 / TIMG6） */
-#define ENCODER_A       1    /* 电机A 编码器，接 CAPTURE_0（PB4 / TIMA1）  */
+/*
+ * 正交编码器计次模块（A 相跳变沿触发 + B 相电平判向，2 倍频）
+ *
+ * 引脚（由 SysConfig 配置，见 main.syscfg 的 GPIO_ENCODER）：
+ *   左编码器: A = PB26, B = PA13
+ *   右编码器: A = PB4,  B = PB5
+ *
+ * 计数为有符号值：正转递增，反转递减。
+ */
 
-/* 编码器线数：电机每转一圈，单相输出脉冲数，请按实际编码器修改 */
-#define ENCODER_PPR     20
+/* 左轮编码器计数值 */
+extern volatile int32_t Encoder_L_Count;
+/* 右轮编码器计数值 */
+extern volatile int32_t Encoder_R_Count;
 
-/* 初始化编码器：使能 NVIC 中断并启动两个输入捕获定时器 */
+/* 初始化编码器（读取初始相位，并使能 GROUP1 中断） */
 void Encoder_Init(void);
 
-/* 获取电机转速（脉冲/秒），wheel 取 ENCODER_A 或 ENCODER_B */
-int32_t Encoder_GetSpeed(uint8_t wheel);
+/* 读取计数值 */
+int32_t Encoder_Read_L(void);
+int32_t Encoder_Read_R(void);
 
-/* 获取电机转速（转/分钟），wheel 取 ENCODER_A 或 ENCODER_B */
-int32_t Encoder_GetRPM(uint8_t wheel);
+/* 清零计数值 */
+void Encoder_Clear_L(void);
+void Encoder_Clear_R(void);
+
+/* 相位更新函数，由 GROUP1_IRQHandler 调用，用户无需直接调用 */
+void Encoder_L_Update(void);
+void Encoder_R_Update(void);
 
 #endif /* __ENCODER_H */

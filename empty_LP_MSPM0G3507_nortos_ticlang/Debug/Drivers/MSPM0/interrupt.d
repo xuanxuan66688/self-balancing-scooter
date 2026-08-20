@@ -87,7 +87,8 @@ Drivers/MSPM0/interrupt.o: ../Drivers/MSPM0/interrupt.c \
  C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/VL53L0X/vl53l0x_types.h \
  C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/VL53L0X/vl53l0x_platform.h \
  C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/VL53L0X/vl53l0x_platform_log.h \
- C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/LSM6DSV16X/lsm6dsv16x.h
+ C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/LSM6DSV16X/lsm6dsv16x.h \
+ ../USER/Encoder.h
 ti_msp_dl_config.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/msp/msp.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/DeviceFamily.h:
@@ -176,3 +177,4 @@ C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers
 C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/VL53L0X/vl53l0x_platform.h:
 C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/VL53L0X/vl53l0x_platform_log.h:
 C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/LSM6DSV16X/lsm6dsv16x.h:
+../USER/Encoder.h:

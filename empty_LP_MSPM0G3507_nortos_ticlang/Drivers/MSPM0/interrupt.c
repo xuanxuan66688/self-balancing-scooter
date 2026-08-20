@@ -6,6 +6,7 @@
 #include "wit.h"
 #include "vl53l0x.h"
 #include "lsm6dsv16x.h"
+#include "../../USER/Encoder.h"
 
 uint8_t enable_group1_irq = 0;
 
@@ -115,6 +116,48 @@ void UART_WIT_INST_IRQHandler(void)
 void GROUP1_IRQHandler(void)
 {
     switch (DL_Interrupt_getPendingGroup(DL_INTERRUPT_GROUP_1)) {
+        #if defined GPIO_ENCODER_GPIOA_INT_IIDX
+        case GPIO_ENCODER_GPIOA_INT_IIDX:
+            switch (DL_GPIO_getPendingInterrupt(GPIOA))
+            {
+                /* 左编码器 B 相（PA13）：仅清中断，不计数 */
+                case GPIO_ENCODER_L_ENCODER_B_IIDX:
+                    DL_GPIO_clearInterruptStatus(GPIOA, GPIO_ENCODER_L_ENCODER_B_PIN);
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+        #endif
+
+        #if defined GPIO_ENCODER_GPIOB_INT_IIDX
+        case GPIO_ENCODER_GPIOB_INT_IIDX:
+            switch (DL_GPIO_getPendingInterrupt(GPIOB))
+            {
+                /* 左编码器 A 相（PB26）：跳变沿计数 */
+                case GPIO_ENCODER_L_ENCODER_A_IIDX:
+                    DL_GPIO_clearInterruptStatus(GPIOB, GPIO_ENCODER_L_ENCODER_A_PIN);
+                    Encoder_L_Update();
+                    break;
+
+                /* 右编码器 A 相（PB4）：跳变沿计数 */
+                case GPIO_ENCODER_R_ENCODER_A_IIDX:
+                    DL_GPIO_clearInterruptStatus(GPIOB, GPIO_ENCODER_R_ENCODER_A_PIN);
+                    Encoder_R_Update();
+                    break;
+
+                /* 右编码器 B 相（PB5）：仅清中断，不计数 */
+                case GPIO_ENCODER_R_ENCODER_B_IIDX:
+                    DL_GPIO_clearInterruptStatus(GPIOB, GPIO_ENCODER_R_ENCODER_B_PIN);
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+        #endif
+
         #if defined GPIO_MULTIPLE_GPIOA_INT_IIDX
         case GPIO_MULTIPLE_GPIOA_INT_IIDX:
             switch (DL_GPIO_getPendingInterrupt(GPIOA))

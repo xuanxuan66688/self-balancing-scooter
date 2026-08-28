@@ -36,6 +36,9 @@
 #include "USER/MOTOR.h"
 #include "USER/Encoder.h"
 
+/*串口接受缓存区*/
+uint8_t gEchoData;
+
 int main(void)
 {
     SYSCFG_DL_init();
@@ -48,6 +51,9 @@ int main(void)
 
     /* 初始化编码器计次（使能 GROUP1 中断并读取初始相位） */
     Encoder_Init();
+    /*串口中断清空与使能*/
+    NVIC_ClearPendingIRQ(UART_0_INST_INT_IRQN);
+    NVIC_EnableIRQ(UART_0_INST_INT_IRQN);
 
     DL_TimerA_startCounter(PWM_0_INST);
 
@@ -64,5 +70,17 @@ int main(void)
         /* 右编码器（A=PB4, B=PB5） */
         OLED_ShowString(0, 2, (uint8_t *)"R:", 16);
         OLED_ShowSignedNum(16, 2, Encoder_Read_R(), 6, 16);
+    }
+}
+/*串口中断函数*/
+void UART_0_INST_IRQHandler(void)
+{
+    switch (DL_UART_Main_getPendingInterrupt(UART_0_INST)) {
+        case DL_UART_MAIN_IIDX_RX:
+            gEchoData = DL_UART_Main_receiveData(UART_0_INST);
+            DL_UART_Main_transmitData(UART_0_INST, gEchoData);
+            break;
+        default:
+            break;
     }
 }

@@ -36,6 +36,11 @@ typedef struct {
 
 extern WIT_Data_t wit_data;
 
+/* 调试用：DMA 接收缓冲区与中断触发次数 */
+extern uint8_t wit_dmaBuffer[33];
+extern volatile uint32_t wit_rx_count;
+extern volatile uint32_t wit_angle_count;
+
 void WIT_Init(void);
 
 #endif /* #ifndef __WIT_H */

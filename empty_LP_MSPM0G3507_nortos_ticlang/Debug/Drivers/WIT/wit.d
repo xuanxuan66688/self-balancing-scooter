@@ -1,6 +1,6 @@
 # FIXED
 
-Drivers/MPU6050/mspm0_i2c.o: ../Drivers/MPU6050/mspm0_i2c.c \
+Drivers/WIT/wit.o: ../Drivers/WIT/wit.c ../Drivers/WIT/wit.h \
  ti_msp_dl_config.h \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/msp/msp.h \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/DeviceFamily.h \
@@ -74,9 +74,8 @@ Drivers/MPU6050/mspm0_i2c.o: ../Drivers/MPU6050/mspm0_i2c.c \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/dl_vref.h \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/dl_wwdt.h \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_interrupt.h \
- C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_systick.h \
- C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/MSPM0/clock.h \
- ../Drivers/MPU6050/mspm0_i2c.h
+ C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_systick.h
+../Drivers/WIT/wit.h:
 ti_msp_dl_config.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/msp/msp.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/DeviceFamily.h:
@@ -151,5 +150,3 @@ C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/dl_vref.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/dl_wwdt.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_interrupt.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_systick.h:
-C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/MSPM0/clock.h:
-../Drivers/MPU6050/mspm0_i2c.h:

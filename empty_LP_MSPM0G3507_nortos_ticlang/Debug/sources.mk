@@ -119,8 +119,8 @@ GEN_OPTS__QUOTED :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 . \
-Drivers/MPU6050 \
 Drivers/MSPM0 \
 Drivers/OLED_Hardware_I2C \
+Drivers/WIT \
 USER \
 

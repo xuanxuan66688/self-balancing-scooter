@@ -2,6 +2,9 @@
 
 uint8_t wit_dmaBuffer[33];
 
+volatile uint32_t wit_rx_count = 0;
+volatile uint32_t wit_angle_count = 0;
+
 WIT_Data_t wit_data;
 
 void WIT_Init(void)

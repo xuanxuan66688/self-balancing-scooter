@@ -35,52 +35,58 @@
 #include "stdio.h"
 #include "USER/MOTOR.h"
 #include "USER/Encoder.h"
+#include "USER/Serial.h"
 
-/*串口接受缓存区*/
-uint8_t gEchoData;
+
+
+/* 显示 WIT 姿态角（单位：度，1 位小数）：P=俯仰 pitch，R=横滚 roll，Y=偏航 yaw */
+void WIT_Show_Data(void)
+{
+    /* 显示 WIT 姿态角（单位：度，保留 1 位小数）
+     *  P = 俯仰 pitch，R = 横滚 roll，Y = 偏航 yaw
+     *  第 4 行 AC 为成功解析的角度(0x53)帧计数，用于确认解析正常，调试确认后可删除 */
+    OLED_ShowString(0, 0, (uint8_t *)"P:", 16);
+    OLED_ShowSignedFloat(16, 0, wit_data.pitch, 1, 16);
+
+    OLED_ShowString(0, 2, (uint8_t *)"R:", 16);
+    OLED_ShowSignedFloat(16, 2, wit_data.roll, 1, 16);
+
+    OLED_ShowString(0, 4, (uint8_t *)"Y:", 16);
+    OLED_ShowSignedFloat(16, 4, wit_data.yaw, 1, 16);
+
+}
 
 int main(void)
 {
     SYSCFG_DL_init();
     SysTick_Init();
 
-    OLED_Init();
+   // OLED_Init();
 
     /* Don't remove this! */
     Interrupt_Init();
 
     /* 初始化编码器计次（使能 GROUP1 中断并读取初始相位） */
     Encoder_Init();
-    /*串口中断清空与使能*/
-    NVIC_ClearPendingIRQ(UART_0_INST_INT_IRQN);
-    NVIC_EnableIRQ(UART_0_INST_INT_IRQN);
-
+    /* 初始化 WIT 姿态传感器（使能 DMA 与 UART_WIT 接收中断） */
+    WIT_Init();
+    /* 串口收发初始化（使能 UART0 接收中断） */
+    Serial_Init();
+    Serial_SendString("1\r\n");
     DL_TimerA_startCounter(PWM_0_INST);
+    int16_t i = -5;
+    Serial_SendInt16(i);
+    Serial_SendString("\r\n");
 
     /* 驱动电机 A、B，各 50% 占空比（满占空比 100） */
-  //  MOTOR_duty(50, MOTOR_B);
-  //  MOTOR_duty(50, MOTOR_A);
+   // MOTOR_duty(50, MOTOR_B);
+   // MOTOR_duty(50, MOTOR_A);
 
     while (1)
     {
-        /* 左编码器（A=PB26, B=PA13） */
-        OLED_ShowString(0, 0, (uint8_t *)"L:", 16);
-        OLED_ShowSignedNum(16, 0, Encoder_Read_L(), 6, 16);
-
-        /* 右编码器（A=PB4, B=PB5） */
-        OLED_ShowString(0, 2, (uint8_t *)"R:", 16);
-        OLED_ShowSignedNum(16, 2, Encoder_Read_R(), 6, 16);
-    }
-}
-/*串口中断函数*/
-void UART_0_INST_IRQHandler(void)
-{
-    switch (DL_UART_Main_getPendingInterrupt(UART_0_INST)) {
-        case DL_UART_MAIN_IIDX_RX:
-            gEchoData = DL_UART_Main_receiveData(UART_0_INST);
-            DL_UART_Main_transmitData(UART_0_INST, gEchoData);
-            break;
-        default:
-            break;
+        /* 显示 WIT 姿态角（P/R/Y） */
+        //WIT_Show_Data();
+        DL_GPIO_togglePins(TEST_LED_PORT, TEST_LED_LED_PIN);
+       delay_ms(500);
     }
 }

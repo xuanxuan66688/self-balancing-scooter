@@ -61,8 +61,10 @@ void UART_BNO08X_INST_IRQHandler(void)
 #if defined UART_WIT_INST_IRQHandler
 void UART_WIT_INST_IRQHandler(void)
 {
-    uint8_t checkSum, packCnt = 0;
+    uint8_t checkSum;
     extern uint8_t wit_dmaBuffer[33];
+
+    wit_rx_count++;   /* 调试：记录中断触发次数 */
 
     DL_DMA_disableChannel(DMA, DMA_WIT_CHAN_ID);
     uint8_t rxSize = 32 - DL_DMA_getTransferSize(DMA, DMA_WIT_CHAN_ID);
@@ -70,38 +72,54 @@ void UART_WIT_INST_IRQHandler(void)
     if(DL_UART_isRXFIFOEmpty(UART_WIT_INST) == false)
         wit_dmaBuffer[rxSize++] = DL_UART_receiveData(UART_WIT_INST);
 
-    while(rxSize >= 11)
+    /* 逐字节扫描 0x55 帧头，动态对齐。
+     * 原实现假设帧固定从缓冲区 0/11/22 字节开始，但 DMA 缓冲(32B)不是帧长(11B)的
+     * 整数倍，缓冲区起点会相对帧流漂移，导致部分帧被跳过。改为扫描帧头后不再依赖对齐。 */
     {
-        checkSum=0;
-        for(int i=packCnt*11; i<(packCnt+1)*11-1; i++)
-            checkSum += wit_dmaBuffer[i];
-
-        if((wit_dmaBuffer[packCnt*11] == 0x55) && (checkSum == wit_dmaBuffer[packCnt*11+10]))
+        uint8_t idx = 0;
+        while(idx + 11 <= rxSize)
         {
-            if(wit_dmaBuffer[packCnt*11+1] == 0x51)
+            if(wit_dmaBuffer[idx] != 0x55)
             {
-                wit_data.ax = (int16_t)((wit_dmaBuffer[packCnt*11+3]<<8)|wit_dmaBuffer[packCnt*11+2]) / 2.048; //mg
-                wit_data.ay = (int16_t)((wit_dmaBuffer[packCnt*11+5]<<8)|wit_dmaBuffer[packCnt*11+4]) / 2.048; //mg
-                wit_data.az = (int16_t)((wit_dmaBuffer[packCnt*11+7]<<8)|wit_dmaBuffer[packCnt*11+6]) / 2.048; //mg
-                wit_data.temperature =  (int16_t)((wit_dmaBuffer[packCnt*11+9]<<8)|wit_dmaBuffer[packCnt*11+8]) / 100.0; //°C
+                idx++;               /* 不是帧头，向后找 */
+                continue;
             }
-            else if(wit_dmaBuffer[packCnt*11+1] == 0x52)
-            {
-                wit_data.gx = (int16_t)((wit_dmaBuffer[packCnt*11+3]<<8)|wit_dmaBuffer[packCnt*11+2]) / 16.384; //°/S
-                wit_data.gy = (int16_t)((wit_dmaBuffer[packCnt*11+5]<<8)|wit_dmaBuffer[packCnt*11+4]) / 16.384; //°/S
-                wit_data.gz = (int16_t)((wit_dmaBuffer[packCnt*11+7]<<8)|wit_dmaBuffer[packCnt*11+6]) / 16.384; //°/S
-            }
-            else if(wit_dmaBuffer[packCnt*11+1] == 0x53)
-            {
-                wit_data.roll  = (int16_t)((wit_dmaBuffer[packCnt*11+3]<<8)|wit_dmaBuffer[packCnt*11+2]) / 32768.0 * 180.0; //°
-                wit_data.pitch = (int16_t)((wit_dmaBuffer[packCnt*11+5]<<8)|wit_dmaBuffer[packCnt*11+4]) / 32768.0 * 180.0; //°
-                wit_data.yaw   = (int16_t)((wit_dmaBuffer[packCnt*11+7]<<8)|wit_dmaBuffer[packCnt*11+6]) / 32768.0 * 180.0; //°
-                wit_data.version = (int16_t)((wit_dmaBuffer[packCnt*11+9]<<8)|wit_dmaBuffer[packCnt*11+8]);
-            }
-        }
 
-        rxSize -= 11;
-        packCnt++;
+            checkSum = 0;
+            for(int i = 0; i < 10; i++)
+                checkSum += wit_dmaBuffer[idx + i];
+
+            if(checkSum != wit_dmaBuffer[idx + 10])
+            {
+                idx++;               /* 校验和不匹配，继续找下一个 0x55 */
+                continue;
+            }
+
+            /* 校验通过，解析该帧类型 */
+            if(wit_dmaBuffer[idx + 1] == 0x51)
+            {
+                wit_data.ax = (int16_t)((wit_dmaBuffer[idx + 3]<<8)|wit_dmaBuffer[idx + 2]) / 2.048; //mg
+                wit_data.ay = (int16_t)((wit_dmaBuffer[idx + 5]<<8)|wit_dmaBuffer[idx + 4]) / 2.048; //mg
+                wit_data.az = (int16_t)((wit_dmaBuffer[idx + 7]<<8)|wit_dmaBuffer[idx + 6]) / 2.048; //mg
+                wit_data.temperature =  (int16_t)((wit_dmaBuffer[idx + 9]<<8)|wit_dmaBuffer[idx + 8]) / 100.0; //°C
+            }
+            else if(wit_dmaBuffer[idx + 1] == 0x52)
+            {
+                wit_data.gx = (int16_t)((wit_dmaBuffer[idx + 3]<<8)|wit_dmaBuffer[idx + 2]) / 16.384; //°/S
+                wit_data.gy = (int16_t)((wit_dmaBuffer[idx + 5]<<8)|wit_dmaBuffer[idx + 4]) / 16.384; //°/S
+                wit_data.gz = (int16_t)((wit_dmaBuffer[idx + 7]<<8)|wit_dmaBuffer[idx + 6]) / 16.384; //°/S
+            }
+            else if(wit_dmaBuffer[idx + 1] == 0x53)
+            {
+                wit_angle_count++;   /* 调试：统计成功解析的角度帧数 */
+                wit_data.roll  = (int16_t)((wit_dmaBuffer[idx + 3]<<8)|wit_dmaBuffer[idx + 2]) / 32768.0 * 180.0; //°
+                wit_data.pitch = (int16_t)((wit_dmaBuffer[idx + 5]<<8)|wit_dmaBuffer[idx + 4]) / 32768.0 * 180.0; //°
+                wit_data.yaw   = (int16_t)((wit_dmaBuffer[idx + 7]<<8)|wit_dmaBuffer[idx + 6]) / 32768.0 * 180.0; //°
+                wit_data.version = (int16_t)((wit_dmaBuffer[idx + 9]<<8)|wit_dmaBuffer[idx + 8]);
+            }
+
+            idx += 11;               /* 跳过已解析的整帧 */
+        }
     }
     
     uint8_t dummy[4];

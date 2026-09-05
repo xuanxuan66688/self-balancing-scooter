@@ -29,6 +29,14 @@ int32_t Encoder_Read_R(void);
 void Encoder_Clear_L(void);
 void Encoder_Clear_R(void);
 
+/* T 法测速：返回最近一次相邻编码器边沿的周期（单位 us；无有效测量返回 0） */
+uint32_t Encoder_PeriodUs_L(void);
+uint32_t Encoder_PeriodUs_R(void);
+
+/* T 法测速：返回速度（计数/秒，带符号整数，正转正、反转负；停止返回 0） */
+int32_t Encoder_Speed_L(void);
+int32_t Encoder_Speed_R(void);
+
 /* 相位更新函数，由 GROUP1_IRQHandler 调用，用户无需直接调用 */
 void Encoder_L_Update(void);
 void Encoder_R_Update(void);

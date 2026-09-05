@@ -6,33 +6,21 @@ SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../USER/Encoder.c \
-../USER/MOTOR.c \
-../USER/Serial.c 
+../Drivers/WIT/wit.c 
 
 C_DEPS += \
-./USER/Encoder.d \
-./USER/MOTOR.d \
-./USER/Serial.d 
+./Drivers/WIT/wit.d 
 
 OBJS += \
-./USER/Encoder.o \
-./USER/MOTOR.o \
-./USER/Serial.o 
+./Drivers/WIT/wit.o 
 
 OBJS__QUOTED += \
-"USER\Encoder.o" \
-"USER\MOTOR.o" \
-"USER\Serial.o" 
+"Drivers\WIT\wit.o" 
 
 C_DEPS__QUOTED += \
-"USER\Encoder.d" \
-"USER\MOTOR.d" \
-"USER\Serial.d" 
+"Drivers\WIT\wit.d" 
 
 C_SRCS__QUOTED += \
-"../USER/Encoder.c" \
-"../USER/MOTOR.c" \
-"../USER/Serial.c" 
+"../Drivers/WIT/wit.c" 
 
 

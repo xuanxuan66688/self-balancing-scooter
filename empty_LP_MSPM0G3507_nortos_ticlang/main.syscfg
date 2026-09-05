@@ -23,6 +23,7 @@ const PWM1   = PWM.addInstance();
 const SYSCTL = scripting.addModule("/ti/driverlib/SYSCTL");
 const UART   = scripting.addModule("/ti/driverlib/UART", {}, false);
 const UART1  = UART.addInstance();
+const UART2  = UART.addInstance();
 
 /**
  * Write custom configuration values to the imported modules.
@@ -132,25 +133,45 @@ SYSCTL.forceDefaultClkConfig = true;
 
 UART1.$name                    = "UART_0";
 UART1.enabledInterrupts        = ["RX"];
+UART1.targetBaudRate           = 115200;
 UART1.peripheral.$assign       = "UART0";
 UART1.peripheral.rxPin.$assign = "PA11";
 UART1.peripheral.txPin.$assign = "PA10";
 UART1.txPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric6";
 UART1.rxPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric7";
 
+UART2.$name                            = "UART_WIT";
+UART2.direction                        = "RX";
+UART2.enableFIFO                       = true;
+UART2.rxTimeoutValue                   = 1;
+UART2.enabledInterrupts                = ["RX_TIMEOUT_ERROR"];
+UART2.enabledDMARXTriggers             = "DL_UART_DMA_INTERRUPT_RX";
+UART2.targetBaudRate                   = 115200;
+UART2.rxPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric9";
+UART2.rxPinConfig.hideOutputInversion  = scripting.forceWrite(false);
+UART2.rxPinConfig.onlyInternalResistor = scripting.forceWrite(false);
+UART2.rxPinConfig.passedPeripheralType = scripting.forceWrite("Digital");
+UART2.peripheral.rxPin.$assign         = "PB16";
+UART2.DMA_CHANNEL_RX.$name             = "DMA_WIT";
+UART2.DMA_CHANNEL_RX.addressMode       = "f2b";
+UART2.DMA_CHANNEL_RX.srcLength         = "BYTE";
+UART2.DMA_CHANNEL_RX.dstLength         = "BYTE";
+
 /**
  * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
  * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
  * re-solve from scratch.
  */
-Board.peripheral.$suggestSolution            = "DEBUGSS";
-Board.peripheral.swclkPin.$suggestSolution   = "PA20";
-Board.peripheral.swdioPin.$suggestSolution   = "PA19";
-GPIO3.associatedPins[0].pin.$suggestSolution = "PB6";
-GPIO3.associatedPins[1].pin.$suggestSolution = "PB7";
-GPIO4.associatedPins[0].pin.$suggestSolution = "PB9";
-GPIO4.associatedPins[1].pin.$suggestSolution = "PB10";
-I2C1.peripheral.sdaPin.$suggestSolution      = "PA0";
-I2C1.peripheral.sclPin.$suggestSolution      = "PA1";
-PWM1.peripheral.$suggestSolution             = "TIMA0";
-SYSCTL.peripheral.$suggestSolution           = "SYSCTL";
+Board.peripheral.$suggestSolution                = "DEBUGSS";
+Board.peripheral.swclkPin.$suggestSolution       = "PA20";
+Board.peripheral.swdioPin.$suggestSolution       = "PA19";
+GPIO3.associatedPins[0].pin.$suggestSolution     = "PB6";
+GPIO3.associatedPins[1].pin.$suggestSolution     = "PB7";
+GPIO4.associatedPins[0].pin.$suggestSolution     = "PB9";
+GPIO4.associatedPins[1].pin.$suggestSolution     = "PB10";
+I2C1.peripheral.sdaPin.$suggestSolution          = "PA0";
+I2C1.peripheral.sclPin.$suggestSolution          = "PA1";
+PWM1.peripheral.$suggestSolution                 = "TIMA0";
+SYSCTL.peripheral.$suggestSolution               = "SYSCTL";
+UART2.peripheral.$suggestSolution                = "UART2";
+UART2.DMA_CHANNEL_RX.peripheral.$suggestSolution = "DMA_CH0";

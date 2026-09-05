@@ -284,6 +284,79 @@ void OLED_ShowSignedNum(uint8_t x,uint8_t y,int32_t num,uint8_t len,uint8_t size
     }
 }
 
+//显示带符号浮点数
+//x,y :起点坐标
+//num:要显示的带符号浮点数
+//decimals:小数位数
+//sizey:字体大小
+void OLED_ShowSignedFloat(uint8_t x,uint8_t y,float num,uint8_t decimals,uint8_t sizey)
+{
+    char buf[16];
+    uint8_t i, j, neg = 0;
+    uint8_t charW = (sizey == 8) ? 6 : (sizey / 2);
+    uint32_t scale = 1;
+    uint32_t ip;      //整数部分
+    uint32_t frac;    //小数部分(0 ~ scale-1)
+    uint32_t div;
+
+    if(num < 0.0f)
+    {
+        neg = 1;
+        num = -num;
+    }
+
+    ip = (uint32_t)num;
+    for(i = 0; i < decimals; i++) scale *= 10;
+    frac = (uint32_t)((num - (float)ip) * (float)scale + 0.5f);   //四舍五入
+    if(frac >= scale)
+    {
+        frac = 0;
+        ip++;
+    }
+
+    //整数部分转字符串（逆序）
+    j = 0;
+    if(ip == 0)
+    {
+        buf[j++] = '0';
+    }
+    else
+    {
+        while(ip != 0)
+        {
+            buf[j++] = (char)('0' + (ip % 10));
+            ip /= 10;
+        }
+    }
+    if(neg)
+    {
+        buf[j++] = '-';
+    }
+
+    //输出整数部分（逆序）
+    for(i = j; i > 0; i--)
+    {
+        OLED_ShowChar(x, y, (uint8_t)buf[i - 1], sizey);
+        x += charW;
+    }
+
+    //输出小数点与小数部分
+    if(decimals > 0)
+    {
+        OLED_ShowChar(x, y, '.', sizey);
+        x += charW;
+
+        div = scale / 10;
+        for(i = 0; i < decimals; i++)
+        {
+            OLED_ShowChar(x, y, (uint8_t)('0' + (frac / div)), sizey);
+            x += charW;
+            frac %= div;
+            div /= 10;
+        }
+    }
+}
+
 //显示汉字
 void OLED_ShowChinese(uint8_t x,uint8_t y,uint8_t no,uint8_t sizey)
 {

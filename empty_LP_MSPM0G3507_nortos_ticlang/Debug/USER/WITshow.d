@@ -1,6 +1,6 @@
 # FIXED
 
-main.o: ../main.c \
+USER/WITshow.o: ../USER/WITshow.c ../USER/WITshow.h \
  ti_msp_dl_config.h \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/msp/msp.h \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/DeviceFamily.h \
@@ -75,7 +75,7 @@ main.o: ../main.c \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/dl_wwdt.h \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_interrupt.h \
  C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_systick.h \
- ../main.h \
+ C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/main.h \
  C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/MSPM0/clock.h \
  C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/MSPM0/interrupt.h \
  C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/MPU6050/mpu6050.h \
@@ -95,8 +95,8 @@ main.o: ../main.c \
  C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/VL53L0X/vl53l0x_types.h \
  C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/VL53L0X/vl53l0x_platform.h \
  C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/VL53L0X/vl53l0x_platform_log.h \
- C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/LSM6DSV16X/lsm6dsv16x.h \
- ../USER/MOTOR.h ../USER/Encoder.h ../USER/Serial.h ../USER/WITshow.h
+ C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/LSM6DSV16X/lsm6dsv16x.h
+../USER/WITshow.h:
 ti_msp_dl_config.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/msp/msp.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/devices/DeviceFamily.h:
@@ -171,7 +171,7 @@ C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/dl_vref.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/dl_wwdt.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_interrupt.h:
 C:/ti/mspm0_sdk_2_05_01_00/source/ti/driverlib/m0p/dl_systick.h:
-../main.h:
+C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/main.h:
 C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/MSPM0/clock.h:
 C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/MSPM0/interrupt.h:
 C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/MPU6050/mpu6050.h:
@@ -192,7 +192,3 @@ C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers
 C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/VL53L0X/vl53l0x_platform.h:
 C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/VL53L0X/vl53l0x_platform_log.h:
 C:/Users/liuyuxuan/workspace_ccstheia/empty_LP_MSPM0G3507_nortos_ticlang/Drivers/LSM6DSV16X/lsm6dsv16x.h:
-../USER/MOTOR.h:
-../USER/Encoder.h:
-../USER/Serial.h:
-../USER/WITshow.h:

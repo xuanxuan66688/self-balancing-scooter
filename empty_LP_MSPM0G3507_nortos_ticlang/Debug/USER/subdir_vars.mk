@@ -8,31 +8,37 @@ SHELL = cmd.exe
 C_SRCS += \
 ../USER/Encoder.c \
 ../USER/MOTOR.c \
-../USER/Serial.c 
+../USER/Serial.c \
+../USER/WITshow.c 
 
 C_DEPS += \
 ./USER/Encoder.d \
 ./USER/MOTOR.d \
-./USER/Serial.d 
+./USER/Serial.d \
+./USER/WITshow.d 
 
 OBJS += \
 ./USER/Encoder.o \
 ./USER/MOTOR.o \
-./USER/Serial.o 
+./USER/Serial.o \
+./USER/WITshow.o 
 
 OBJS__QUOTED += \
 "USER\Encoder.o" \
 "USER\MOTOR.o" \
-"USER\Serial.o" 
+"USER\Serial.o" \
+"USER\WITshow.o" 
 
 C_DEPS__QUOTED += \
 "USER\Encoder.d" \
 "USER\MOTOR.d" \
-"USER\Serial.d" 
+"USER\Serial.d" \
+"USER\WITshow.d" 
 
 C_SRCS__QUOTED += \
 "../USER/Encoder.c" \
 "../USER/MOTOR.c" \
-"../USER/Serial.c" 
+"../USER/Serial.c" \
+"../USER/WITshow.c" 
 
 

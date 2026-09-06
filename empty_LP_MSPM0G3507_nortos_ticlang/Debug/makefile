@@ -21,6 +21,7 @@ ORDERED_OBJS += \
 "./USER/MOTOR.o" \
 "./USER/Serial.o" \
 "./USER/WITshow.o" \
+"./USER/pid.o" \
 $(GEN_CMDS__FLAG) \
 -Wl,-ldevice.cmd.genlibs \
 -Wl,-llibc.a \
@@ -153,8 +154,8 @@ empty_LP_MSPM0G3507_nortos_ticlang.out: $(OBJS) $(GEN_CMDS)
 # Other Targets
 clean:
 	-$(RM) $(GEN_MISC_FILES__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.o" "ti_msp_dl_config.o" "startup_mspm0g350x_ticlang.o" "Drivers\MSPM0\clock.o" "Drivers\MSPM0\interrupt.o" "Drivers\OLED_Hardware_I2C\oled_hardware_i2c.o" "Drivers\WIT\wit.o" "USER\Encoder.o" "USER\MOTOR.o" "USER\Serial.o" "USER\WITshow.o" 
-	-$(RM) "main.d" "ti_msp_dl_config.d" "startup_mspm0g350x_ticlang.d" "Drivers\MSPM0\clock.d" "Drivers\MSPM0\interrupt.d" "Drivers\OLED_Hardware_I2C\oled_hardware_i2c.d" "Drivers\WIT\wit.d" "USER\Encoder.d" "USER\MOTOR.d" "USER\Serial.d" "USER\WITshow.d" 
+	-$(RM) "main.o" "ti_msp_dl_config.o" "startup_mspm0g350x_ticlang.o" "Drivers\MSPM0\clock.o" "Drivers\MSPM0\interrupt.o" "Drivers\OLED_Hardware_I2C\oled_hardware_i2c.o" "Drivers\WIT\wit.o" "USER\Encoder.o" "USER\MOTOR.o" "USER\Serial.o" "USER\WITshow.o" "USER\pid.o" 
+	-$(RM) "main.d" "ti_msp_dl_config.d" "startup_mspm0g350x_ticlang.d" "Drivers\MSPM0\clock.d" "Drivers\MSPM0\interrupt.d" "Drivers\OLED_Hardware_I2C\oled_hardware_i2c.d" "Drivers\WIT\wit.d" "USER\Encoder.d" "USER\MOTOR.d" "USER\Serial.d" "USER\WITshow.d" "USER\pid.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

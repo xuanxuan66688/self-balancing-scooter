@@ -97,6 +97,14 @@ extern "C" {
 
 
 
+/* Defines for TIMER_0 */
+#define TIMER_0_INST                                                     (TIMA1)
+#define TIMER_0_INST_IRQHandler                                 TIMA1_IRQHandler
+#define TIMER_0_INST_INT_IRQN                                   (TIMA1_INT_IRQn)
+#define TIMER_0_INST_LOAD_VALUE                                           (624U)
+
+
+
 
 /* Defines for I2C_OLED */
 #define I2C_OLED_INST                                                       I2C0
@@ -229,6 +237,7 @@ void SYSCFG_DL_initPower(void);
 void SYSCFG_DL_GPIO_init(void);
 void SYSCFG_DL_SYSCTL_init(void);
 void SYSCFG_DL_PWM_0_init(void);
+void SYSCFG_DL_TIMER_0_init(void);
 void SYSCFG_DL_I2C_OLED_init(void);
 void SYSCFG_DL_I2C_MPU6050_init(void);
 void SYSCFG_DL_UART_0_init(void);

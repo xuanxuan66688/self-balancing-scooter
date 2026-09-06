@@ -37,30 +37,41 @@
 #include "USER/Encoder.h"
 #include "USER/Serial.h"
 #include "USER/WITshow.h"
+#include "USER/pid.h"
+pid_type_def pid_stand;
 int main(void)
 {
     SYSCFG_DL_init();
     SysTick_Init();
 
     OLED_Init();
-
     /* Don't remove this! */
     Interrupt_Init();
-
     /* 初始化编码器计次（使能 GROUP1 中断并读取初始相位） */
     Encoder_Init();
     /* 初始化 WIT 姿态传感器（使能 DMA 与 UART_WIT 接收中断） */
     WIT_Init();
     /* 串口收发初始化（使能 UART0 接收中断） */
     Serial_Init();
-
+    /*pid控制函数初始化*/
+    // 定义电机pid参数
+    float pid_param_0[3] = {0.0, 0.0, 0.0};
+    PID_init(&pid_stand, PID_POSITION, pid_param_0, 100.0, 50.0);
     /* 驱动电机 A、B，各 50% 占空比（满占空比 100） */
     MOTOR_duty(50, MOTOR_B);
     MOTOR_duty(50, MOTOR_A);
+
+    NVIC_EnableIRQ(TIMER_0_INST_INT_IRQN);
+    DL_TimerA_startCounter(TIMER_0_INST);
 
     while (1)
     {
         /* 显示 WIT 姿态角（P/R/Y） */
         WIT_Show_Data();
     }
+}
+void TIMER_0_INST_IRQHandler()
+{
+    DL_GPIO_togglePins(TEST_LED_PORT, TEST_LED_LED_PIN);
+       
 }

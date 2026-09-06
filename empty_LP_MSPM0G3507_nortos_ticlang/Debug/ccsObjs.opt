@@ -9,6 +9,7 @@
 "./USER/MOTOR.o"
 "./USER/Serial.o"
 "./USER/WITshow.o"
+"./USER/pid.o"
 -l"./device_linker.cmd"
 -ldevice.cmd.genlibs
 -llibc.a

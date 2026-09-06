@@ -21,6 +21,8 @@ const I2C2   = I2C.addInstance();
 const PWM    = scripting.addModule("/ti/driverlib/PWM", {}, false);
 const PWM1   = PWM.addInstance();
 const SYSCTL = scripting.addModule("/ti/driverlib/SYSCTL");
+const TIMER  = scripting.addModule("/ti/driverlib/TIMER", {}, false);
+const TIMER1 = TIMER.addInstance();
 const UART   = scripting.addModule("/ti/driverlib/UART", {}, false);
 const UART1  = UART.addInstance();
 const UART2  = UART.addInstance();
@@ -131,6 +133,12 @@ PWM1.ccp1PinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric5";
 
 SYSCTL.forceDefaultClkConfig = true;
 
+TIMER1.$name            = "TIMER_0";
+TIMER1.interrupts       = ["ZERO"];
+TIMER1.timerClkPrescale = 256;
+TIMER1.timerMode        = "PERIODIC";
+TIMER1.timerPeriod      = "5ms";
+
 UART1.$name                    = "UART_0";
 UART1.enabledInterrupts        = ["RX"];
 UART1.targetBaudRate           = 115200;
@@ -173,5 +181,6 @@ I2C1.peripheral.sdaPin.$suggestSolution          = "PA0";
 I2C1.peripheral.sclPin.$suggestSolution          = "PA1";
 PWM1.peripheral.$suggestSolution                 = "TIMA0";
 SYSCTL.peripheral.$suggestSolution               = "SYSCTL";
+TIMER1.peripheral.$suggestSolution               = "TIMA1";
 UART2.peripheral.$suggestSolution                = "UART2";
 UART2.DMA_CHANNEL_RX.peripheral.$suggestSolution = "DMA_CH0";

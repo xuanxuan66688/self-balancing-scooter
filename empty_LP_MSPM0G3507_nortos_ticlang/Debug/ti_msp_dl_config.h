@@ -101,7 +101,7 @@ extern "C" {
 #define TIMER_0_INST                                                     (TIMA1)
 #define TIMER_0_INST_IRQHandler                                 TIMA1_IRQHandler
 #define TIMER_0_INST_INT_IRQN                                   (TIMA1_INT_IRQn)
-#define TIMER_0_INST_LOAD_VALUE                                           (624U)
+#define TIMER_0_INST_LOAD_VALUE                                            (62U)
 
 
 

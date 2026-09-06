@@ -137,7 +137,7 @@ TIMER1.$name            = "TIMER_0";
 TIMER1.interrupts       = ["ZERO"];
 TIMER1.timerClkPrescale = 256;
 TIMER1.timerMode        = "PERIODIC";
-TIMER1.timerPeriod      = "5ms";
+TIMER1.timerPeriod      = "0.5ms";
 
 UART1.$name                    = "UART_0";
 UART1.enabledInterrupts        = ["RX"];

@@ -39,7 +39,8 @@
 #include "USER/WITshow.h"
 #include "USER/pid.h"
 pid_type_def pid_stand;
-int main(void)
+
+int main(void)       
 {
     SYSCFG_DL_init();
     SysTick_Init();
@@ -55,12 +56,13 @@ int main(void)
     Serial_Init();
     /*pid控制函数初始化*/
     // 定义电机pid参数
-    float pid_param_0[3] = {0.0, 0.0, 0.0};
+    float pid_param_0[3] = {3, 0.0, 20.0};
     PID_init(&pid_stand, PID_POSITION, pid_param_0, 100.0, 50.0);
+   
     /* 驱动电机 A、B，各 50% 占空比（满占空比 100） */
-    MOTOR_duty(50, MOTOR_B);
-    MOTOR_duty(50, MOTOR_A);
-
+     DL_TimerA_startCounter(PWM_0_INST);
+   // MOTOR_duty(100, MOTOR_B);
+   // MOTOR_duty(0, MOTOR_A);
     NVIC_EnableIRQ(TIMER_0_INST_INT_IRQN);
     DL_TimerA_startCounter(TIMER_0_INST);
 
@@ -68,10 +70,33 @@ int main(void)
     {
         /* 显示 WIT 姿态角（P/R/Y） */
         WIT_Show_Data();
+         
     }
 }
 void TIMER_0_INST_IRQHandler()
 {
-    DL_GPIO_togglePins(TEST_LED_PORT, TEST_LED_LED_PIN);
+   float angle, speed, balance_out, speed_out;
+    int16_t duty;
+
+    /* 1. 读姿态角（WIT 俯仰角，单位：度） */
+    angle = wit_data.pitch;
+
+    /* 2. 读速度（左右编码器平均，计数/秒） */
+   // speed = (Encoder_Speed_L() + Encoder_Speed_R()) * 0.5f;
+
+    /* 3. 直立环：目标 0°，反馈当前角度 → 输出期望速度 */
+    balance_out = PID_calc(&pid_stand, angle, 0.0f);
+
+    /* 4. 速度环：目标 = 直立环输出，反馈当前速度 → 输出 PWM 占空比 */
+   // speed_out = PID_calc(&pid_speed, speed, balance_out);
+
+    /* 5. 两轮同向输出纠正倾斜；若方向反了，把 Kp 取负或互换电机正负 */
+    duty = (int16_t)balance_out;
+    if(duty==0)
+    {
+        duty=1;
+    }
+    MOTOR_duty(duty, MOTOR_B);   /* 左轮 */
+    MOTOR_duty(duty, MOTOR_A);   /* 右轮 */
        
 }

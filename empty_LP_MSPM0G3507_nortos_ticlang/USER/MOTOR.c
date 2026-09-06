@@ -68,6 +68,7 @@ void MOTOR_duty(int16_t duty, uint8_t wheel)
             duty = -duty;
             duty = 100 - duty;
         }
+        
         else
         {
             MOTOR_Dir(0, 0);

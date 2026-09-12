@@ -181,7 +181,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
 		 DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_PULL_UP,
 		 DL_GPIO_HYSTERESIS_DISABLE, DL_GPIO_WAKEUP_DISABLE);
 
-    DL_GPIO_setLowerPinsPolarity(GPIOA, DL_GPIO_PIN_13_EDGE_RISE_FALL);
+    DL_GPIO_setLowerPinsPolarity(GPIOA, DL_GPIO_PIN_13_EDGE_RISE);
     DL_GPIO_clearInterruptStatus(GPIOA, GPIO_ENCODER_L_ENCODER_B_PIN);
     DL_GPIO_enableInterrupt(GPIOA, GPIO_ENCODER_L_ENCODER_B_PIN);
     DL_GPIO_clearPins(GPIOB, TEST_LED_LED_PIN |
@@ -194,9 +194,9 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
 		BIN_BIN2_PIN |
 		AIN_AIN1_PIN |
 		AIN_AIN2_PIN);
-    DL_GPIO_setLowerPinsPolarity(GPIOB, DL_GPIO_PIN_4_EDGE_RISE_FALL |
-		DL_GPIO_PIN_5_EDGE_RISE_FALL);
-    DL_GPIO_setUpperPinsPolarity(GPIOB, DL_GPIO_PIN_26_EDGE_RISE_FALL);
+    DL_GPIO_setLowerPinsPolarity(GPIOB, DL_GPIO_PIN_4_EDGE_RISE |
+		DL_GPIO_PIN_5_EDGE_RISE);
+    DL_GPIO_setUpperPinsPolarity(GPIOB, DL_GPIO_PIN_26_EDGE_RISE);
     DL_GPIO_clearInterruptStatus(GPIOB, GPIO_ENCODER_L_ENCODER_A_PIN |
 		GPIO_ENCODER_R_ENCODER_A_PIN |
 		GPIO_ENCODER_R_ENCODER_B_PIN);
@@ -220,7 +220,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_SYSCTL_init(void)
     DL_SYSCTL_setULPCLKDivider(DL_SYSCTL_ULPCLK_DIV_1);
     DL_SYSCTL_setMCLKDivider(DL_SYSCTL_MCLK_DIVIDER_DISABLE);
     /* INT_GROUP1 Priority */
-    NVIC_SetPriority(GPIOB_INT_IRQn, 1);
+    NVIC_SetPriority(GPIOB_INT_IRQn, 0);
 
 }
 
@@ -259,7 +259,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_PWM_0_init(void) {
 		DL_TIMERA_CAPTURE_COMPARE_0_INDEX);
 
     DL_TimerA_setCaptCompUpdateMethod(PWM_0_INST, DL_TIMER_CC_UPDATE_METHOD_IMMEDIATE, DL_TIMERA_CAPTURE_COMPARE_0_INDEX);
-    DL_TimerA_setCaptureCompareValue(PWM_0_INST, 50, DL_TIMER_CC_0_INDEX);
+    DL_TimerA_setCaptureCompareValue(PWM_0_INST, 0, DL_TIMER_CC_0_INDEX);
 
     DL_TimerA_setCaptureCompareOutCtl(PWM_0_INST, DL_TIMER_CC_OCTL_INIT_VAL_LOW,
 		DL_TIMER_CC_OCTL_INV_OUT_DISABLED, DL_TIMER_CC_OCTL_SRC_FUNCVAL,
@@ -292,7 +292,7 @@ static const DL_TimerA_ClockConfig gTIMER_0ClockConfig = {
 
 /*
  * Timer load value (where the counter starts from) is calculated as (timerPeriod * timerClockFreq) - 1
- * TIMER_0_INST_LOAD_VALUE = (0.5ms * 125000 Hz) - 1
+ * TIMER_0_INST_LOAD_VALUE = (10ms * 125000 Hz) - 1
  */
 static const DL_TimerA_TimerConfig gTIMER_0TimerConfig = {
     .period     = TIMER_0_INST_LOAD_VALUE,

@@ -51,28 +51,28 @@ void MOTOR_Dir(uint8_t dir, uint8_t wheel)
 void MOTOR_duty(int16_t duty, uint8_t wheel)
 {
     // 输出限幅
-    if (duty > 100)
+    if (duty > 99)
     {
-        duty = 100;
+        duty = 99;
     }
-    else if (duty < -100)
+    else if (duty < -99)
     {
-        duty = -100;
+        duty = -99;
     }
 
     if (wheel == 0)
     {
         if (duty < 0)
         {
-            MOTOR_Dir(1, 0);
+            MOTOR_Dir(1, 1);
             duty = -duty;
-            duty = 100 - duty;
+            duty = 99 - duty;
         }
         
         else
         {
-            MOTOR_Dir(0, 0);
-            duty = 100 - duty;
+            MOTOR_Dir(0, 1);
+            duty = 99 - duty;
         }
         DL_TimerA_setCaptureCompareValue(PWM_0_INST, duty, DL_TIMER_CC_0_INDEX);
     }
@@ -80,14 +80,14 @@ void MOTOR_duty(int16_t duty, uint8_t wheel)
     {
         if (duty < 0)
         {
-            MOTOR_Dir(1, 1);
+            MOTOR_Dir(1, 0);
             duty = -duty;
-            duty = 100 - duty;
+            duty = 99 - duty;
         }
         else
         {
-            MOTOR_Dir(0, 1);
-            duty = 100 - duty;
+            MOTOR_Dir(0, 0);
+            duty = 99 - duty;
         }
         DL_TimerA_setCaptureCompareValue(PWM_0_INST, duty, DL_TIMER_CC_1_INDEX);
     }

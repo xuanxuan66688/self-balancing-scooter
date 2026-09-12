@@ -151,17 +151,31 @@ void GROUP1_IRQHandler(void)
 
         #if defined GPIO_ENCODER_GPIOB_INT_IIDX
         case GPIO_ENCODER_GPIOB_INT_IIDX:
+
+
+            // if(DL_GPIO_getPendingInterrupt(GPIOB) ==  GPIO_ENCODER_L_ENCODER_A_IIDX)
+            // {
+            //     DL_GPIO_clearInterruptStatus(GPIOB, GPIO_ENCODER_L_ENCODER_A_PIN);
+            //      Encoder_L_Update();
+            // }
+            // else if(DL_GPIO_getPendingInterrupt(GPIOB) ==  GPIO_ENCODER_R_ENCODER_A_IIDX)
+            // {
+            //     DL_GPIO_clearInterruptStatus(GPIOB, GPIO_ENCODER_R_ENCODER_A_PIN);
+            //     Encoder_R_Update();
+            //     }
+            // else if(DL_GPIO_getPendingInterrupt(GPIOB) ==  GPIO_ENCODER_R_ENCODER_B_IIDX){ DL_GPIO_clearInterruptStatus(GPIOB, GPIO_ENCODER_R_ENCODER_B_PIN);}
+            
             switch (DL_GPIO_getPendingInterrupt(GPIOB))
             {
                 /* 左编码器 A 相（PB26）：跳变沿计数 */
                 case GPIO_ENCODER_L_ENCODER_A_IIDX:
-                    DL_GPIO_clearInterruptStatus(GPIOB, GPIO_ENCODER_L_ENCODER_A_PIN);
-                    Encoder_L_Update();
+                   DL_GPIO_clearInterruptStatus(GPIOB, GPIO_ENCODER_L_ENCODER_A_PIN);
+                     Encoder_L_Update();
                     break;
 
                 /* 右编码器 A 相（PB4）：跳变沿计数 */
                 case GPIO_ENCODER_R_ENCODER_A_IIDX:
-                    DL_GPIO_clearInterruptStatus(GPIOB, GPIO_ENCODER_R_ENCODER_A_PIN);
+                     DL_GPIO_clearInterruptStatus(GPIOB, GPIO_ENCODER_R_ENCODER_A_PIN);
                     Encoder_R_Update();
                     break;
 

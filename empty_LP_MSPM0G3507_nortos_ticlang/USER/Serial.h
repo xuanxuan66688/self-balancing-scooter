@@ -16,6 +16,9 @@
 /* 接收环形缓冲区大小（需为 2 的幂） */
 #define SERIAL_RX_BUF_SIZE 128
 
+/* serialprintf 格式化缓冲区大小 */
+#define SERIAL_PRINTF_BUF_SIZE 128
+
 /* 初始化串口（使能 UART0 接收中断；外设配置已在 SYSCFG_DL_init 完成） */
 void Serial_Init(void);
 
@@ -27,6 +30,9 @@ void Serial_SendData(const uint8_t *buf, uint16_t len);
 
 /* 阻塞发送字符串（\0 结尾） */
 void Serial_SendString(const char *str);
+
+/* printf 风格格式化输出到串口 0（阻塞），用法同 printf，返回写入字符数 */
+int serialprintf(const char *fmt, ...);
 
 /* 阻塞发送 16 位有符号整数（2 字节，小端） */
 void Serial_SendInt16(int16_t data);

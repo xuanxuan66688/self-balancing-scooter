@@ -100,7 +100,7 @@ void Encoder_Init(void)
     g_R_valid      = 0;
 
     /* GPIOA/GPIOB 中断都挂在 GROUP1（IRQ1），使能一次即可 */
-    NVIC_EnableIRQ(GPIO_ENCODER_GPIOA_INT_IRQN);
+   NVIC_EnableIRQ(GPIO_ENCODER_GPIOA_INT_IRQN);
     NVIC_EnableIRQ(GPIO_ENCODER_GPIOB_INT_IRQN);
 }
 
@@ -111,15 +111,33 @@ void Encoder_L_Update(void)
     uint8_t b = Encoder_L_ReadB();
     uint32_t now;
 
-    if (a != b)
+    if (a == 1)
     {
-        Encoder_L_Count++;      /* 正向 */
-        direction_L = 1;
+        if(b==0)
+        {
+            Encoder_L_Count++;      /* 正向 */
+            direction_L = 1;
+         }
+         else {
+         
+             Encoder_L_Count--;      /* 负向 */
+        direction_L = -1;
+         }
+        
+       
     }
     else
     {
-        Encoder_L_Count--;      /* 负向 */
+         if(b==1)
+        {
+            Encoder_L_Count++;      /* 正向 */
+            direction_L = 1;
+         }
+         else {
+         
+             Encoder_L_Count--;      /* 负向 */
         direction_L = -1;
+         }
     }
 
     /* T 法：记录本次边沿时间，与上次边沿时间相减得到周期 */
@@ -139,15 +157,16 @@ void Encoder_R_Update(void)
     uint8_t b = Encoder_R_ReadB();
     uint32_t now;
 
-    if (a != b)
+    if (a !=b)
     {
-        Encoder_R_Count++;      /* 正向 */
-        direction_R = 1;
+            Encoder_R_Count++;      /* 正向 */
+            direction_R = 1;
     }
     else
     {
-        Encoder_R_Count--;      /* 负向 */
+          Encoder_R_Count--;      /* 负向 */
         direction_R = -1;
+         
     }
 
     /* T 法：记录本次边沿时间，与上次边沿时间相减得到周期 */

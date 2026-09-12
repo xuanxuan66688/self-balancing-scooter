@@ -1,5 +1,7 @@
 #include "Serial.h"
 #include "ti_msp_dl_config.h"
+#include <stdarg.h>
+#include <stdio.h>
 
 /* 接收环形缓冲区（中断写入，主循环读取） */
 static volatile uint8_t  serial_rx_buf[SERIAL_RX_BUF_SIZE];
@@ -34,6 +36,29 @@ void Serial_SendString(const char *str)
     while (*str) {
         Serial_SendByte((uint8_t)(*str++));
     }
+}
+
+/*
+ * serialprintf：printf 风格格式化输出到串口 0。
+ * 先用 vsnprintf 把参数格式化到局部缓冲区，再一次性阻塞发出。
+ * 返回格式化后的字符数（不含结尾 '\0'）。
+ */
+int serialprintf(const char *fmt, ...)
+{
+    char buf[SERIAL_PRINTF_BUF_SIZE];
+    va_list args;
+    int n;
+
+    va_start(args, fmt);
+    n = vsnprintf(buf, sizeof(buf), fmt, args);
+    va_end(args);
+
+    if (n > 0) {
+        /* vsnprintf 返回完整长度；实际写入缓冲区的为 min(n, sizeof(buf)-1) */
+        int len = (n < (int)sizeof(buf)) ? n : (int)sizeof(buf) - 1;
+        Serial_SendData((const uint8_t *)buf, (uint16_t)len);
+    }
+    return n;
 }
 
 void Serial_SendInt16(int16_t data)
